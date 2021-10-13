@@ -283,7 +283,12 @@ public class DownloadAction implements DownloadSpec {
     private void executeHttpProtocol(URL src, HttpClientFactory clientFactory,
             long timestamp, File destFile) throws IOException {
         //create HTTP host from URL
-        HttpHost httpHost = new HttpHost(src.getHost(), src.getPort(), src.getProtocol());
+        String host = src.getHost();
+        if (src.getUserInfo() != null && !src.getUserInfo().isEmpty()) {
+            host = src.getUserInfo() + "@" + host;
+        }
+
+        HttpHost httpHost = new HttpHost(host, src.getPort(), src.getProtocol());
         
         //create HTTP client
         CloseableHttpClient client = clientFactory.createHttpClient(
